@@ -1,3 +1,5 @@
+// This file is used to generate a file using this HTML template. name and github are taken from the command line...
+
 const generatePage = (name, github) => {
     return `
     <!DOCTYPE html>
@@ -17,4 +19,5 @@ const generatePage = (name, github) => {
     `;
 };
 
+// ...and this command exports the content of the page template to app.js
 module.exports = generatePage;
