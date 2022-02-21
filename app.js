@@ -1,5 +1,6 @@
 // imports the fs module from node.js
 const fs = require('fs');
+const { writeFile } = require('fs/promises');
 // inports inquirer
 const inquirer = require('inquirer');
 // imports page-template.js
@@ -139,15 +140,52 @@ Add a New Project
 promptUser()
   // calls promptProject
   .then(promptProject)
+  // generates page from the portfolio data, then prints
   .then(portfolioData => {
-    const pageHTML = generatePage(portfolioData);
-
-    fs.writeFile('./dist/index.html', pageHTML, err => {
-      if (err) throw new Error(err);
-
-      console.log("Page created! Check out index.html in this directory to see it!");
-    });
+    return generatePage(portfolioData);
+  })
+  //writes the printed data into a file
+  .then(pageHTML => {
+      return writeFile(pageHTML);
+  })
+  // writes the file name
+  .then(writeFileResponse => {
+      console.log(writeFileResponse);
+      return copyFile();
+  })
+  // response to copying files
+  .then(copyFileResponse => {
+      console.log(copyFileResponse);
+  })
+  // catches an error and gives an error message if it occurs
+  .catch(err => {
+      console.log(err);
   });
+// ...yet another functional string they want gone...
+//     const pageHTML = generatePage(portfolioData);
+
+//     // creates index.html in the dist folder, showing it to be the final result
+//     fs.writeFile('./dist/index.html', pageHTML, err => {
+//     // If there's an error, it shows an error and stops the function
+//       if (err) {
+//           console.log(err);
+//           return;
+//       }
+//       // confirms the page has been created
+//       console.log('Page created! Check out index.html in this directory to see it!');
+
+//       // copies style.css from src to dist for final site
+//       fs.copyFile('./src/style.css', './dist/style.css', err => {
+//           // stops the function if there is an error
+//           if (err) {
+//               console.log(err);
+//               return;
+//           }
+//           // shows in the console that the style sheet has been copied to dist for final site
+//           console.log('Style sheet copied successfully!')
+//       })
+//   });
+// });
   // calls the portfolio data
   // .then(portfolioData => {
 
@@ -158,4 +196,3 @@ promptUser()
 
   //   console.log('Page created! Check out index.html in this directory to see it!);
   // })
-  // });
