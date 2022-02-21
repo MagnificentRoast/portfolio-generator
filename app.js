@@ -1,6 +1,5 @@
-// imports the fs module from node.js
-const fs = require('fs');
-const { writeFile } = require('fs/promises');
+// imports generate-site.js as a substitute for fs
+const { writeFile, copyFile } = require('./utils/generate-site.js')
 // inports inquirer
 const inquirer = require('inquirer');
 // imports page-template.js
@@ -136,24 +135,24 @@ Add a New Project
     });
 };
 
-// calls promptUser function
+// captures data from promptUser to use in promptProject for as many projects as what is needed to add
 promptUser()
-  // calls promptProject
+  // retroactively calls the promptProject function
   .then(promptProject)
-  // generates page from the portfolio data, then prints
+  // All captured data is brought down to portfolioData, which then moves it to generatePage, which generates the HTML code into pageHTML
   .then(portfolioData => {
     return generatePage(portfolioData);
   })
-  //writes the printed data into a file
+  //Imports captured data from portfolioData and does a page template for HTML
   .then(pageHTML => {
       return writeFile(pageHTML);
   })
-  // writes the file name
+  // This returns a promise, it's why you use return, so the promise is then returned into next then method
   .then(writeFileResponse => {
       console.log(writeFileResponse);
       return copyFile();
   })
-  // response to copying files
+  // it lets us know if copying the file was successful
   .then(copyFileResponse => {
       console.log(copyFileResponse);
   })
@@ -161,7 +160,7 @@ promptUser()
   .catch(err => {
       console.log(err);
   });
-// ...yet another functional string they want gone...
+  
 //     const pageHTML = generatePage(portfolioData);
 
 //     // creates index.html in the dist folder, showing it to be the final result
